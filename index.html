@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Valentine 💖</title>
+<title>Will You Be My Valentine 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@ body{
   100%{background-position:0% 50%}
 }
 .card{
-  background:rgba(255,255,255,0.93);
+  background:rgba(255,255,255,0.94);
   border-radius:28px;
   padding:38px;
   width:380px;
@@ -58,11 +58,11 @@ button:disabled{
   opacity:0.45;
   cursor:not-allowed;
 }
-#yes,#yes2,#yes3{
+.yes{
   background:linear-gradient(135deg,#ff4d6d,#ff758f);
   color:white;
 }
-#no,#no2,#no3{
+.no{
   background:#eee;
   color:#555;
 }
@@ -80,18 +80,18 @@ button:disabled{
   <h2>💘 BOOBY 💘<br>WILL YOU PLEASE BE MY VALENTINE? 🥺</h2>
   <img class="media" src="milk-mocha-heart.gif">
   <div class="buttons">
-    <button id="yes">YES 💖</button>
-    <button id="no">NO 🙈</button>
+    <button class="yes" id="yes1">YES 💖</button>
+    <button class="no" id="no1">NO 🙈</button>
   </div>
 </div>
 
 <!-- PHASE 2 -->
 <div class="card hidden" id="p2">
   <h2>REALLY? 😳💔</h2>
-  <img id="p2img" class="media hidden" src="instant-heartbreak-heartbreak.webp">
+  <img class="media hidden" id="p2img" src="instant-heartbreak-heartbreak.webp">
   <div class="buttons">
-    <button id="yes2" disabled>YES 💖</button>
-    <button id="no2">NO 🙈</button>
+    <button class="yes" id="yes2" disabled>YES 💖</button>
+    <button class="no" id="no2">NO 🙈</button>
   </div>
 </div>
 
@@ -101,8 +101,8 @@ button:disabled{
   <p><strong>BOOBY, WILL YOU BE MY VALENTINE? 💕</strong></p>
   <img class="media" src="milk-and-mocha (1).webp">
   <div class="buttons">
-    <button id="yes3">YES 💖</button>
-    <button id="no3">NO 🙈</button>
+    <button class="yes" id="yes3">YES 💖</button>
+    <button class="no" id="no3">NO 🙈</button>
   </div>
 </div>
 
@@ -113,52 +113,67 @@ button:disabled{
   <img class="media" src="valentine's-day.gif">
 </div>
 
+<!-- AUDIO -->
+<audio id="bgm" preload="auto">
+  <source src="glad-you-exist.mp3" type="audio/mpeg">
+</audio>
 <audio id="cry" src="https://assets.mixkit.co/sfx/preview/mixkit-cartoon-cry-494.mp3"></audio>
 <audio id="yay" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
-<audio id="bgm" src="glad-you-exist.mp3" loop></audio>
 
-/* DOM REFERENCES (FIX) */
+<script>
+/* ---------- DOM ---------- */
 const p1=document.getElementById("p1");
 const p2=document.getElementById("p2");
 const p3=document.getElementById("p3");
 const p4=document.getElementById("p4");
 
-const yes=document.getElementById("yes");
-const no=document.getElementById("no");
+const yes1=document.getElementById("yes1");
+const no1=document.getElementById("no1");
 const yes2=document.getElementById("yes2");
 const no2=document.getElementById("no2");
 const yes3=document.getElementById("yes3");
 const no3=document.getElementById("no3");
 
-const p2img=document.getElementById("p2img");
+const bgm=document.getElementById("bgm");
 const cry=document.getElementById("cry");
 const yay=document.getElementById("yay");
-const bgm=document.getElementById("bgm");
+const p2img=document.getElementById("p2img");
 
-/* VIBRATION */
-function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); }
+/* ---------- AUDIO UNLOCK ---------- */
+let audioUnlocked=false;
+function unlockAudio(){
+  if(audioUnlocked) return;
+  bgm.muted=true;
+  bgm.play().then(()=>{
+    bgm.pause();
+    bgm.currentTime=0;
+    bgm.muted=false;
+    bgm.loop=true;
+    audioUnlocked=true;
+  }).catch(()=>{});
+}
 
-/* PHASE 1 */
-no.onmouseenter=()=>{
-  vibrate(40);
-  no.style.position="fixed";
-  no.style.left=Math.random()*80+"vw";
-  no.style.top=Math.random()*80+"vh";
+/* ---------- PHASE 1 ---------- */
+no1.onmouseenter=()=>{
+  no1.style.position="fixed";
+  no1.style.left=Math.random()*80+"vw";
+  no1.style.top=Math.random()*80+"vh";
 };
-no.onclick=e=>e.preventDefault();
+no1.onclick=e=>e.preventDefault();
 
-yes.onclick=()=>{
+yes1.onclick=()=>{
+  unlockAudio();
   p1.classList.add("hidden");
   p2.classList.remove("hidden");
 };
 
-/* PHASE 2 */
+/* ---------- PHASE 2 ---------- */
 const taunts=[
  "WHY 🙈?",
  "DON'T YOU LOVE ME 🙈?",
  "WHY DON'T YOU WANT TO BE MY VALENTINE 🙈?",
  "NOW YOU'RE JUST BEING MEAN 😡",
- "…"
+ "..."
 ];
 const scales=[0.96,0.92,0.88,0.82,0.72];
 let clicks=0;
@@ -168,9 +183,8 @@ no2.onclick=()=>{
 
   cry.currentTime=0;
   cry.play();
-  vibrate([60,40,60]);
-
   p2img.classList.remove("hidden");
+
   no2.innerText=taunts[clicks];
   no2.style.transform=`scale(${scales[clicks]})`;
 
@@ -181,23 +195,17 @@ no2.onclick=()=>{
   }
 };
 
-yes2.onclick = () => {
+yes2.onclick=()=>{
   p2.classList.add("hidden");
   p3.classList.remove("hidden");
-
-  bgm.volume = 0.4;
-
-  // REQUIRED for autoplay policies
-  bgm.currentTime = 0;
-  bgm.play().catch(() => {
-    console.log("Autoplay blocked until user interaction");
-  });
+  if(audioUnlocked){
+    bgm.volume=0.4;
+    bgm.play();
+  }
 };
 
-
-/* PHASE 3 */
+/* ---------- PHASE 3 ---------- */
 no3.onmouseenter=()=>{
-  vibrate(50);
   no3.style.position="fixed";
   no3.style.left=Math.random()*80+"vw";
   no3.style.top=Math.random()*80+"vh";
