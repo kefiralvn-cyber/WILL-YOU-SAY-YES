@@ -115,7 +115,7 @@ button:disabled{
 
 <audio id="cry" src="https://assets.mixkit.co/sfx/preview/mixkit-cartoon-cry-494.mp3"></audio>
 <audio id="yay" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
-<audio id="bgm" src="Glad you exist - Dan  Shay ( Lyrics ).mp3" loop></audio>
+<audio id="bgm" src="glad-you-exist.mp3" loop></audio>
 
 <script>
 /* DOM REFERENCES (FIX) */
@@ -182,12 +182,19 @@ no2.onclick=()=>{
   }
 };
 
-yes2.onclick=()=>{
+yes2.onclick = () => {
   p2.classList.add("hidden");
   p3.classList.remove("hidden");
-  bgm.volume=0.4;
-  bgm.play();
+
+  bgm.volume = 0.4;
+
+  // REQUIRED for autoplay policies
+  bgm.currentTime = 0;
+  bgm.play().catch(() => {
+    console.log("Autoplay blocked until user interaction");
+  });
 };
+
 
 /* PHASE 3 */
 no3.onmouseenter=()=>{
