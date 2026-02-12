@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:linear-gradient(-45deg,#ff9a9e,#fad0c4,#fbc2eb,#a18cd1);
+  background-size:400% 400%;
+  animation:bgMove 12s infinite;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+.card{
+  background:rgba(255,255,255,0.93);
+  border-radius:28px;
+  padding:38px;
+  width:380px;
+  text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,0.25);
+}
+.hidden{display:none}
+h2,p{
+  font-family:Playfair Display,serif;
+  color:#4a1c2f;
+}
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin-top:25px;
+}
+button{
+  padding:14px 32px;
+  border:none;
+  border-radius:40px;
+  font-size:16px;
+  cursor:pointer;
+  transition:transform 0.35s ease, opacity 0.3s ease;
+  white-space:nowrap;
+}
+button:disabled{
+  opacity:0.45;
+  cursor:not-allowed;
+}
+#yes,#yes2,#yes3{
+  background:linear-gradient(135deg,#ff4d6d,#ff758f);
+  color:white;
+}
+#no,#no2,#no3{
+  background:#eee;
+  color:#555;
+}
+.media{
+  width:220px;
+  margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PHASE 1 -->
+<div class="card" id="p1">
+  <h2>💘 BOOBY 💘<br>WILL YOU PLEASE BE MY VALENTINE? 🥺</h2>
+  <img class="media" src="milk-mocha-heart.gif">
+  <div class="buttons">
+    <button id="yes">YES 💖</button>
+    <button id="no">NO 🙈</button>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="card hidden" id="p2">
+  <h2>REALLY? 😳💔</h2>
+  <img id="p2img" class="media hidden" src="instant-heartbreak-heartbreak.webp">
+  <div class="buttons">
+    <button id="yes2" disabled>YES 💖</button>
+    <button id="no2">NO 🙈</button>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="card hidden" id="p3">
+  <h2>SEE? WASN’T THAT EASY 😌</h2>
+  <p><strong>BOOBY, WILL YOU BE MY VALENTINE? 💕</strong></p>
+  <img class="media" src="milk-and-mocha (1).webp">
+  <div class="buttons">
+    <button id="yes3">YES 💖</button>
+    <button id="no3">NO 🙈</button>
+  </div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="card hidden" id="p4">
+  <h2>🎉 YAAAAYYY I LOVE YOU SO MUCH 💕🥰</h2>
+  <img class="media" src="milk-and-mocha.webp">
+  <img class="media" src="valentine's-day.gif">
+</div>
+
+<audio id="cry" src="https://assets.mixkit.co/sfx/preview/mixkit-cartoon-cry-494.mp3"></audio>
+<audio id="yay" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+<audio id="bgm" src="Glad you exist - Dan  Shay ( Lyrics ).mp3" loop></audio>
+
+<script>
+/* DOM REFERENCES (FIX) */
+const p1=document.getElementById("p1");
+const p2=document.getElementById("p2");
+const p3=document.getElementById("p3");
+const p4=document.getElementById("p4");
+
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const yes2=document.getElementById("yes2");
+const no2=document.getElementById("no2");
+const yes3=document.getElementById("yes3");
+const no3=document.getElementById("no3");
+
+const p2img=document.getElementById("p2img");
+const cry=document.getElementById("cry");
+const yay=document.getElementById("yay");
+const bgm=document.getElementById("bgm");
+
+/* VIBRATION */
+function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); }
+
+/* PHASE 1 */
+no.onmouseenter=()=>{
+  vibrate(40);
+  no.style.position="fixed";
+  no.style.left=Math.random()*80+"vw";
+  no.style.top=Math.random()*80+"vh";
+};
+no.onclick=e=>e.preventDefault();
+
+yes.onclick=()=>{
+  p1.classList.add("hidden");
+  p2.classList.remove("hidden");
+};
+
+/* PHASE 2 */
+const taunts=[
+ "WHY 🙈?",
+ "DON'T YOU LOVE ME 🙈?",
+ "WHY DON'T YOU WANT TO BE MY VALENTINE 🙈?",
+ "NOW YOU'RE JUST BEING MEAN 😡",
+ "…"
+];
+const scales=[0.96,0.92,0.88,0.82,0.72];
+let clicks=0;
+
+no2.onclick=()=>{
+  if(clicks>=5) return;
+
+  cry.currentTime=0;
+  cry.play();
+  vibrate([60,40,60]);
+
+  p2img.classList.remove("hidden");
+  no2.innerText=taunts[clicks];
+  no2.style.transform=`scale(${scales[clicks]})`;
+
+  clicks++;
+  if(clicks===5){
+    no2.disabled=true;
+    yes2.disabled=false;
+  }
+};
+
+yes2.onclick=()=>{
+  p2.classList.add("hidden");
+  p3.classList.remove("hidden");
+  bgm.volume=0.4;
+  bgm.play();
+};
+
+/* PHASE 3 */
+no3.onmouseenter=()=>{
+  vibrate(50);
+  no3.style.position="fixed";
+  no3.style.left=Math.random()*80+"vw";
+  no3.style.top=Math.random()*80+"vh";
+};
+no3.onclick=e=>e.preventDefault();
+
+yes3.onclick=()=>{
+  p3.classList.add("hidden");
+  p4.classList.remove("hidden");
+  bgm.pause();
+  yay.play();
+  confetti({particleCount:500,spread:180});
+};
+</script>
+
+</body>
+</html>
